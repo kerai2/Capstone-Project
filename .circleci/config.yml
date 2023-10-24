@@ -77,16 +77,15 @@ jobs:
             make lint
             
   docker-build-and-push:
-    build-and-push:
-      executor: docker/docker
-      steps:
-        - setup_remote_docker
-        - checkout
-        - docker/check
-        - docker/build:
-            image: keraid/test:latest
-        - docker/push:
-            image: keraid/test:latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: keraid/test:latest
+      - docker/push:
+          image: keraid/test:latest
 
 #    docker:
 #      - image: docker:latest
