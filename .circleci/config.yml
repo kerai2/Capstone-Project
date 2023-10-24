@@ -92,3 +92,12 @@ jobs:
           command: |
             docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
             docker push keraid/capstone-project:latest
+            
+
+workflows:
+    deployment:
+      jobs:
+        - build-app
+        - docker-build-and-push:
+            requires:
+              - build-app
