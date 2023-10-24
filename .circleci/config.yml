@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  docker: circleci/docker@2.4.0
   aws-eks: circleci/aws-eks@1.0.3
   kubernetes: circleci/kubernetes@0.11.2
 
@@ -76,22 +77,33 @@ jobs:
             make lint
             
   docker-build-and-push:
-    docker:
-      - image: docker:latest
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build docker image
-          command: |
-            docker build -t capstone-project .
-            docker tag capstone-project keraid/capstone-project
-            docker image ls
-      - run:
-          name: Push docker image
-          command: |
-            docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
-            docker push keraid/capstone-project:latest
+    build-and-push:
+      executor: docker/docker
+      steps:
+        - setup_remote_docker
+        - checkout
+        - docker/check
+        - docker/build:
+            image: keraid/test:latest
+        - docker/push:
+            image: keraid/test:latest
+
+#    docker:
+#      - image: docker:latest
+#    steps:
+#      - checkout
+#      - setup_remote_docker
+#      - run:
+#          name: Build docker image
+#          command: |
+#            docker build -t capstone-project .
+#            docker tag capstone-project keraid/capstone-project
+#            docker image ls
+#      - run:
+#          name: Push docker image
+#          command: |
+#            docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
+#            docker push keraid/capstone-project:latest
             
 
 workflows:
