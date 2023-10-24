@@ -83,10 +83,10 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: keraid/test
+          image: keraid/capstone-project
           tag: latest
       - docker/push:
-          image: keraid/test
+          image: keraid/capstone-project
           tag: latest
 
 #    docker:
