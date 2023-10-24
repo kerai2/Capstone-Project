@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   docker: circleci/docker@2.4.0
-  aws-eks: circleci/aws-eks@1.0.3
+  aws-eks: circleci/aws-eks@2.2.0
   kubernetes: circleci/kubernetes@0.11.2
 
 commands:
@@ -88,6 +88,24 @@ jobs:
       - docker/push:
           image: keraid/capstone-project
           tag: latest
+  
+  test-eks-cluster:
+    docker:
+      - image: cimg/python:3.10
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - kubernetes/install:
+          kubectl-version: v1.22.0
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - run:
+          command: |
+            kubectl get services
+          name: Test cluster
 
 #    docker:
 #      - image: docker:latest
@@ -114,3 +132,11 @@ workflows:
         - docker-build-and-push:
             requires:
               - build-app
+        - aws-eks/create-cluster:
+            cluster-name: capstone-eks
+            aws-region: $AWS_DEFAULT_REGION
+            
+        - test-eks-cluster:
+            cluster-name: capstone-eks
+              requires:
+                - aws-eks/create-cluster
