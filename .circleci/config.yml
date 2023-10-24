@@ -121,9 +121,10 @@ jobs:
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
       - run:
+          name: Test cluster
           command: |
             kubectl get services
-          name: Test cluster
+
 
   create-k8s-deployment:
     docker:
@@ -140,7 +141,7 @@ jobs:
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
-          resource-file-path: deployment.yaml
+          resource-file-path: Capstone-Project/deployment.yaml
           resource-name: deployment/capstone-eks          
 
 workflows:
@@ -154,6 +155,8 @@ workflows:
         - aws-eks/create-cluster:
             cluster-name: capstone-eks
             aws-region: $AWS_DEFAULT_REGION
+            requires:
+              - docker-build-and-push
             
         - test-eks-cluster:
             cluster-name: capstone-eks
