@@ -83,9 +83,9 @@ jobs:
       - checkout
       - docker/check
       - docker/build:
-          image: keraid/test:latest
+          image: keraid/test
       - docker/push:
-          image: keraid/test:latest
+          image: keraid/test
 
 #    docker:
 #      - image: docker:latest
