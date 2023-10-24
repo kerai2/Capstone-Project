@@ -86,6 +86,7 @@ jobs:
           image: keraid/test
       - docker/push:
           image: keraid/test
+          tag: latest
 
 #    docker:
 #      - image: docker:latest
