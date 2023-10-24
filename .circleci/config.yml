@@ -138,5 +138,5 @@ workflows:
             
         - test-eks-cluster:
             cluster-name: capstone-eks
-              requires:
-                - aws-eks/create-cluster
+            requires:
+              - aws-eks/create-cluster
