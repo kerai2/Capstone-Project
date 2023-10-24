@@ -89,6 +89,23 @@ jobs:
           image: keraid/capstone-project
           tag: latest
   
+#    docker:
+#      - image: docker:latest
+#    steps:
+#      - checkout
+#      - setup_remote_docker
+#      - run:
+#          name: Build docker image
+#          command: |
+#            docker build -t capstone-project .
+#            docker tag capstone-project keraid/capstone-project
+#            docker image ls
+#      - run:
+#          name: Push docker image
+#          command: |
+#            docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
+#            docker push keraid/capstone-project:latest
+
   test-eks-cluster:
     docker:
       - image: cimg/python:3.10
@@ -107,23 +124,23 @@ jobs:
             kubectl get services
           name: Test cluster
 
-#    docker:
-#      - image: docker:latest
-#    steps:
-#      - checkout
-#      - setup_remote_docker
-#      - run:
-#          name: Build docker image
-#          command: |
-#            docker build -t capstone-project .
-#            docker tag capstone-project keraid/capstone-project
-#            docker image ls
-#      - run:
-#          name: Push docker image
-#          command: |
-#            docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
-#            docker push keraid/capstone-project:latest
-            
+  create-k8s-deployment:
+    docker:
+      - image: cimg/python:3.7
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - checkout
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+          install-kubectl: true
+      - kubernetes/create-or-update-resource:
+          get-rollout-status: true
+          resource-file-path: deployment.yaml
+          resource-name: deployment/capstone-eks          
 
 workflows:
     deployment:
@@ -132,6 +149,7 @@ workflows:
         - docker-build-and-push:
             requires:
               - build-app
+        
         - aws-eks/create-cluster:
             cluster-name: capstone-eks
             aws-region: $AWS_DEFAULT_REGION
@@ -140,3 +158,9 @@ workflows:
             cluster-name: capstone-eks
             requires:
               - aws-eks/create-cluster
+      
+        - create-k8s-deployment:
+            cluster-name: capstone-eks
+            requires:
+              - aws-eks/create-cluster
+              - test-eks-cluster

@@ -23,7 +23,7 @@ spec:
         app: capstone-project
     spec:
       containers:
-        - image: jcbehr/capstone-project:latest
+        - image: keraid/capstone-project:latest
           imagePullPolicy: Always
           name: new
           ports:
