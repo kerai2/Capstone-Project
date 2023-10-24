@@ -74,3 +74,21 @@ jobs:
           command: |
             . capstone/bin/activate
             make lint
+            
+    docker-build-and-push:
+      docker:
+        - image: docker:latest
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run:
+            name: Build docker image
+            command: |
+              docker build -t capstone-project .
+              docker tag capstone-project keraid/capstone-project
+              docker image ls
+        - run:
+            name: Push docker image
+            command: |
+              docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
+              docker push keraid/capstone-project:latest
