@@ -47,7 +47,7 @@ commands:
             kubectl version --client
 
 jobs:
-  build:
+  build-app:
     docker:
       - image: python:3.7.3-stretch
     working_directory: ~/repo
