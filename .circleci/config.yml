@@ -84,7 +84,7 @@ jobs:
             kubectl get services
 
 
-  create-k8s-deployment:
+  create-and-verify-k8s-deployment:
     docker:
       - image: cimg/python:3.7
     parameters:
@@ -129,7 +129,7 @@ workflows:
             requires:
               - aws-eks/create-cluster
       
-        - create-k8s-deployment:
+        - create-and-verify-k8s-deployment:
             cluster-name: capstone-project-eks
             requires:
               - test-eks-cluster
