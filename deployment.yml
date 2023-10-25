@@ -35,7 +35,7 @@ kind: Service
 metadata:
   name: capstone-project
   labels:
-    app: capstone-project
+    app: capstone-project-lb
 spec:
   type: LoadBalancer
   selector:
