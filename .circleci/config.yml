@@ -141,8 +141,9 @@ jobs:
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
+          show-kubectl-command: true
           resource-file-path: deployment.yml
-          resource-name: deployment/capstone-eks          
+          resource-name: deployment/capstone-project
 
 workflows:
     deployment:
@@ -153,18 +154,18 @@ workflows:
               - build-app
         
         - aws-eks/create-cluster:
-            cluster-name: capstone-eks
+            cluster-name: capstone-project-eks
             aws-region: $AWS_DEFAULT_REGION
             requires:
               - docker-build-and-push
             
         - test-eks-cluster:
-            cluster-name: capstone-eks
+            cluster-name: capstone-project-eks
             requires:
               - aws-eks/create-cluster
       
         - create-k8s-deployment:
-            cluster-name: capstone-eks
+            cluster-name: capstone-project-eks
             requires:
               - aws-eks/create-cluster
               - test-eks-cluster
