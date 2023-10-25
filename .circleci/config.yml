@@ -62,7 +62,7 @@ jobs:
 #          name: Push docker image
 #          command: |
 #            docker login -u "$DOCKER_LOGIN" -p "$DOCKER_PASSWORD" docker.io
-#            docker push keraid/capstone-project:latest
+#           docker push keraid/capstone-project:latest 
 
 
   test-eks-cluster:
