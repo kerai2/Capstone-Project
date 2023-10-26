@@ -86,7 +86,7 @@ I am using circleci pipeline for automated deployment. The pipeline does the fol
 <br/><br/>
 <br/><br/>
 
-## Original Project Brief
+## Original Project Overview
 
 In this project you will apply the skills and knowledge which were developed throughout the Cloud DevOps Nanodegree program. These include:
 
