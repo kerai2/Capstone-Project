@@ -1,3 +1,93 @@
+# Udacity Devops NanoDegree - Capstone Project 5
+
+Final project of Udacity Cloud DevOps Engineer Nanodegree Program.
+
+## Project Overview
+In this project I have implemented all the knowledge that I have gained from the Udacity Cloud DevOps Engineer Nanodegree program. 
+
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![CircleCI](https://img.shields.io/badge/CIRCLECI-%23161616.svg?style=for-the-badge&logo=circleci&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
+
+In this project I have created CICD Pipeline using Circle CI to do:
+- Create Docker image with application
+- Push Docker image to docker hub
+- Created CICD Pipeline to create and setup EKS cluster in AWS. 
+- Deploys the application Docker container in the kubernetes cluster.
+
+## Pre-requisite
+- Create account GitHub
+- Login CircleCI with GitHub
+- Setup GitHub repo/project in CircleCI
+- Create user access and secret keys on AWS
+- Signup Docker Hub
+- Add Environment Variables in CircleCI
+    - Add AWS secret keys 
+        - AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY
+        - AWS_DEFAULT_REGION
+    - Add Docker login
+        - DOCKER_LOGIN
+        - DOCKER_PASSWORD
+
+
+## Application
+
+The application is a simple Python flask script that returns some text.
+
+```
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "<h1 style='text-align: centre;'>Natwest Udacity Capstone Project</h1>"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80, debug=True)
+```
+
+## CircleCi Pipeline
+
+I am using circleci pipeline for automated deployment. The pipeline does the following
+
+![Alt text](circleci-deployment-jobs.png)
+
+1. Job - build app
+
+    Builds the app in virtualenv, installs dependencies from ```requirements.txt``` and performs lint against ``Dockerfile`` and ``app.py``.
+
+2. Job - docker-build-and-push
+
+    This builds the docker image and pushes the image to docker repositary.
+
+3. Job - aws-eks/create-cluster
+
+    This code is in the workflow section. This job creates a Kubernetes cluster in AWS EKS
+
+4. Job - test-eks-cluster
+
+    This job is to verify cluster is up and running
+
+5. Job - create-and-verify-k8s-deployment
+
+    Once test is completed, this job uses the ```deployment.yml``` file to deploy the docker application and create a load balancer. It then outputs cluster information to verify if it has been deployed.
+
+## Improvement Suggestions
+
+- Improve rolling deployment by adding logic to check if cluster already exists and to move on to update cluster with new docker container
+- A job to perform health check post deployment
+- Use Docker token to push and pull images
+
+<br/><br/>
+<br/><br/>
+<br/><br/>
+<br/><br/>
+
+## Original Project Brief
+
 In this project you will apply the skills and knowledge which were developed throughout the Cloud DevOps Nanodegree program. These include:
 
 Working in AWS
